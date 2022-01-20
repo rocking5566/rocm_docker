@@ -11,6 +11,7 @@ RUN wget https://github.com/ROCmSoftwarePlatform/MIOpen/archive/refs/tags/${MIOP
     && unzip ${MIOPEN_VERSION}.zip \
     && cd MIOpen-${MIOPEN_VERSION} \
     && cmake -P install_deps.cmake \
+    && cd .. \
     && rm -rf MIOpen-${MIOPEN_VERSION} ${MIOPEN_VERSION}.zip
 
 RUN apt install -y htop \
