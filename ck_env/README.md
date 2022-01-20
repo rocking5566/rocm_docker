@@ -14,7 +14,9 @@ $ CXX=hipcc cmake . -B build -D HIP_ONLINE_COMPILER_FLAGS="-DCK_AMD_GPU_GFX908" 
 $ cmake --build build -t gemm_driver_offline -j
 ```
 or
-
+```sh
+$ mkdir build
+$ cd build
 $ cmake                                                                \
 -D CMAKE_BUILD_TYPE=Release                                            \
 -D HIP_ONLINE_COMPILER_FLAGS="-DCK_AMD_GPU_GFX908"                     \
@@ -23,3 +25,4 @@ $ cmake                                                                \
 -D CMAKE_PREFIX_PATH=/opt/rocm                                         \
 ..
 $ make -j gemm_xdl
+```
