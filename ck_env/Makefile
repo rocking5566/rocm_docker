@@ -11,4 +11,4 @@ build:
 	docker build -t $(IMAGE_NAME) --build-arg tag=$(tag) -f Dockerfile .
 
 bash:
-	docker run -it -w /work --privileged --rm $(MOUNT_DIR) $(ROCM_PARAM) --net=host $(IMAGE_NAME) bash
+	docker run -it -w /work --privileged --rm $(MOUNT_DIR) $(ROCM_PARAM) --net=host rocm/tensorflow:rocm4.3.1-tf2.6-dev bash
