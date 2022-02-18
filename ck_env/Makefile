@@ -1,4 +1,4 @@
-tag?=9110-ubuntu-18.04-stg1
+tag?=rocm4.3.1-tf2.6-dev
 IMAGE_NAME=rocking_ck:$(tag)
 MOUNT_DIR=-v /home/rocking/work/composable_kernel:/work
 
@@ -11,4 +11,4 @@ build:
 	docker build -t $(IMAGE_NAME) --build-arg tag=$(tag) -f Dockerfile .
 
 bash:
-	docker run -it -w /work --privileged --rm $(MOUNT_DIR) $(ROCM_PARAM) --net=host rocm/tensorflow:rocm4.3.1-tf2.6-dev bash
+	docker run -it -w /work --privileged --rm $(MOUNT_DIR) $(ROCM_PARAM) --net=host $(IMAGE_NAME):rocm4.3.1-tf2.6-dev bash
