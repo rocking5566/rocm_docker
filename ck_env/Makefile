@@ -1,5 +1,5 @@
-tag?=rocm4.3.1-tf2.6-dev
-IMAGE_NAME=rocking_ck:$(tag)
+tag?=2022.03.06
+IMAGE_NAME=composable_kernel:$(tag)
 MOUNT_DIR=-v /home/rocking/work/composable_kernel:/work
 
 ROCM_PARAM=--device=/dev/kfd --device=/dev/dri \
@@ -8,7 +8,7 @@ ROCM_PARAM=--device=/dev/kfd --device=/dev/dri \
 	  --security-opt seccomp=unconfined
 
 build:
-	docker build -t $(IMAGE_NAME) --build-arg tag=$(tag) -f Dockerfile .
+	docker build -t $(IMAGE_NAME) -f Dockerfile .
 
 bash:
-	docker run -it -w /work --privileged --rm $(MOUNT_DIR) $(ROCM_PARAM) --net=host $(IMAGE_NAME):rocm4.3.1-tf2.6-dev bash
+	docker run -it -w /work --privileged --rm $(MOUNT_DIR) $(ROCM_PARAM) --net=host $(IMAGE_NAME) bash
