@@ -20,7 +20,7 @@ $ cd build
 $ cmake                                                                \
 -D CMAKE_BUILD_TYPE=Release                                            \
 -D HIP_ONLINE_COMPILER_FLAGS="-DCK_AMD_GPU_GFX908"                     \
--D CMAKE_CXX_FLAGS="-DCK_AMD_GPU_GFX908 --amdgpu-target=gfx908 -O3 "   \
+-D CMAKE_CXX_FLAGS="-DCK_AMD_GPU_GFX908 --amdgpu-target=gfx908 -O3 -ftemplate-backtrace-limit=0 -mllvm --amdgpu-spill-vgpr-to-agpr=0 -gline-tables-only -save-temps=$PWD"   \
 -D CMAKE_CXX_COMPILER=/opt/rocm/bin/hipcc                              \
 -D CMAKE_PREFIX_PATH=/opt/rocm                                         \
 ..
