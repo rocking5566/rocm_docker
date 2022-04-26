@@ -50,6 +50,7 @@ __global__ void atomicAdd(float* arry, int n, float adder)
     }
 }
 
+#if defined(__gfx90a__)
 __device__ double
 llvm_amdgcn_raw_buffer_atomic_max_fp64(double vdata,
                                        int32x4_t rsrc, // dst_wave_buffer_resource
@@ -66,6 +67,7 @@ __global__ void atomicMax(double* arry, int n, double reg)
         llvm_amdgcn_raw_buffer_atomic_max_fp64(reg, dst_wave_buffer_resource, 0, 0, 0);
     }
 }
+#endif
 
 int main(int argc, char* argv[])
 {
