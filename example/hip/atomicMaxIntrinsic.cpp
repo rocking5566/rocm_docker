@@ -11,7 +11,7 @@ llvm_amdgcn_raw_buffer_atomic_max_fp64(double vdata,
                                        int soffset,    // dst_wave_addr_offset
                                        int glc_slc) __asm("llvm.amdgcn.raw.buffer.atomic.fmax.f64");
 
-__global__ void atomicMax(double* arry, int n, double reg)
+__global__ void atomicMaxIntrinsic(double* arry, int n, double reg)
 {
     int id = blockIdx.x * blockDim.x + threadIdx.x;
     if(id < n)
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     int blockSize = 8;                               // Number of threads in each thread block
     int gridSize  = (int)ceil((double)n / blockSize); // Number of thread blocks in grid
 
-    hipLaunchKernelGGL(atomicMax, dim3(gridSize), dim3(blockSize), 0, 0, device_arry, n, 5);
+    hipLaunchKernelGGL(atomicMaxIntrinsic, dim3(gridSize), dim3(blockSize), 0, 0, device_arry, n, 5);
     hipDeviceSynchronize();
     HIP_ASSERT(hipMemcpy(host_dst, device_arry, arry_size, hipMemcpyDeviceToHost));
 

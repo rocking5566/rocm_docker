@@ -10,7 +10,7 @@ llvm_amdgcn_raw_buffer_atomic_add_fp32(float vdata,
                                        int soffset,    // dst_wave_addr_offset
                                        int glc_slc) __asm("llvm.amdgcn.raw.buffer.atomic.fadd.f32");
 
-__global__ void atomicAdd(float* arry, int n, float adder)
+__global__ void atomicAddIntrinsic(float* arry, int n, float adder)
 {
     int id = blockIdx.x * blockDim.x + threadIdx.x;
     if(id < n)
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     int blockSize = 8;                               // Number of threads in each thread block
     int gridSize  = (int)ceil((float)n / blockSize); // Number of thread blocks in grid
 
-    hipLaunchKernelGGL(atomicAdd, dim3(gridSize), dim3(blockSize), 0, 0, device_arry, n, 5);
+    hipLaunchKernelGGL(atomicAddIntrinsic, dim3(gridSize), dim3(blockSize), 0, 0, device_arry, n, 5);
     hipDeviceSynchronize();
     HIP_ASSERT(hipMemcpy(host_dst, device_arry, arry_size, hipMemcpyDeviceToHost));
 
