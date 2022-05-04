@@ -7,7 +7,7 @@ __global__ void atomicMax(float* arry, int n, float reg)
 {
     int id = blockIdx.x * blockDim.x + threadIdx.x;
     if(id < n)
-        atomicMax(arry + id, reg);
+        atomicMax(arry + id, reg);  // arry[id] = max(reg, arry[id])
 }
 
 int main(int argc, char* argv[])
@@ -21,6 +21,7 @@ int main(int argc, char* argv[])
 
     HIP_ASSERT(hipMalloc(&device_arry, arry_size));
 
+    float reg = 5;
     for(int i = 0; i < n; i++)
         host_src[i] = i;
 
@@ -29,7 +30,7 @@ int main(int argc, char* argv[])
     int blockSize = 8;                               // Number of threads in each thread block
     int gridSize  = (int)ceil((float)n / blockSize); // Number of thread blocks in grid
 
-    hipLaunchKernelGGL(atomicMax, dim3(gridSize), dim3(blockSize), 0, 0, device_arry, n, 5);
+    hipLaunchKernelGGL(atomicMax, dim3(gridSize), dim3(blockSize), 0, 0, device_arry, n, reg);
     hipDeviceSynchronize();
     HIP_ASSERT(hipMemcpy(host_dst, device_arry, arry_size, hipMemcpyDeviceToHost));
 
