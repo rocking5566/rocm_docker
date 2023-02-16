@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
     printf("time = %fms, bandwidth = %f GB/S\n",
            total_time / nrepeat,
-           ((float)2 * arry_size / 1024 / 1024 / 1024) / (total_time / nrepeat / 1000));
+           ((float)2 * arry_size / 1000000) / (total_time / nrepeat));
 
     hipFree(device_src);
     hipFree(device_dst);
