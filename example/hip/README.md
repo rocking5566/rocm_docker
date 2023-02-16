@@ -1,1 +1,1 @@
-# hipcc builtin.cpp -gline-tables-only -save-temps=$PWD
+# hipcc atomicMax.cpp -gline-tables-only -save-temps=$PWD --offload-arch=gfx90a
