@@ -1,6 +1,6 @@
 tag?=2023.03.07
 IMAGE_NAME=rocking_pytorch:$(tag)
-MOUNT_DIR=-v /home/rocking/work:/work
+MOUNT_DIR=-v ${HOME}/work:/work
 
 ROCM_PARAM=--device=/dev/kfd --device=/dev/dri \
 	  --ipc=host --shm-size 16G \
