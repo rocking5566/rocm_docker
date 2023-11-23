@@ -1,5 +1,5 @@
-tag?=2022.03.06
-IMAGE_NAME=composable_kernel:$(tag)
+tag?=2023.09.29
+IMAGE_NAME=rocking_ck:$(tag)
 MOUNT_DIR=-v /home/rocking/work/composable_kernel:/work
 
 ROCM_PARAM=--device=/dev/kfd --device=/dev/dri \
