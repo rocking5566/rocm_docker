@@ -37,9 +37,9 @@ void generate_data(float* tensor, int M, int K)
 int main()
 {
     const int M         = 64;
-    const int K         = 64;
+    const int K         = 256;
     const int gridSize  = M;
-    const int blockSize = 64;
+    const int blockSize = K;
 
     float* dev_in;
     float* dev_out;
