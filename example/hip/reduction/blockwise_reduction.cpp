@@ -5,18 +5,6 @@
 #include <iostream>
 #include "../util.hpp"
 
-template <int N>
-static constexpr __device__ int get_shift()
-{
-    return (get_shift<N / 2>() + 1);
-};
-
-template <>
-constexpr __device__ int get_shift<1>()
-{
-    return (0);
-}
-
 template <typename T, int BlockSize>
 __global__ void blockwise_reduce_kernel(T* input, T* output, int K)
 {
@@ -25,18 +13,11 @@ __global__ void blockwise_reduce_kernel(T* input, T* output, int K)
     work_buf[threadIdx.x] = v;
     __syncthreads();
 
-    constexpr auto cluster_len_shift = get_shift<BlockSize>();
-    for(int i = 0; i < cluster_len_shift; ++i)
+    for(int i = BlockSize >> 1; i > 0; i >>= 1)
     {
-        int indOffset = 1 << (cluster_len_shift - 1 - i);
-        if(threadIdx.x < indOffset)
-        {
-            int offset = threadIdx.x + indOffset;
-            T v1       = work_buf[threadIdx.x];
-            T v2       = work_buf[offset];
+        if(threadIdx.x < i)
+            work_buf[threadIdx.x] += work_buf[threadIdx.x + i];
 
-            work_buf[threadIdx.x] = v1 + v2;
-        }
         __syncthreads();
     }
 
