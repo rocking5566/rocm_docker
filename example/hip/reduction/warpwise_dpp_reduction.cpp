@@ -14,7 +14,7 @@ __device__ to_t bit_cast(const from_t& v)
 }
 
 template <typename T>
-__device__ inline T wave_reduce_sum(const T& thread_data)
+__device__ inline T warpwise_dpp_reduce(const T& thread_data)
 {
     constexpr int row_mask    = 0xf;
     constexpr int bank_mask   = 0xf;
@@ -79,29 +79,35 @@ template <typename T, int BlockSize>
 __global__ void blockwise_reduce_kernel(T* input, T* output, int K)
 {
     T v = input[blockIdx.x * K + threadIdx.x];
-    T t = wave_reduce_sum<T>(v);
+    T t = warpwise_dpp_reduce<T>(v);
 
-    constexpr int LdsSize = BlockSize / warpSize;
-    __shared__ T work_buf[LdsSize];
-
-    if(threadIdx.x % warpSize == 0)
+    if constexpr(BlockSize == warpSize)
     {
-        int idx       = threadIdx.x / warpSize;
-        work_buf[idx] = t;
-        __syncthreads();
-
-        for(int i = LdsSize >> 1; i > 0; i >>= 1)
-        {
-            if(idx < i)
-                work_buf[idx] += work_buf[idx + i];
-
-            __syncthreads();
-        }
+        if(threadIdx.x == 0)
+            output[blockIdx.x] = t;
     }
-
-    if(threadIdx.x == 0)
+    else
     {
-        output[blockIdx.x] = work_buf[0];
+        constexpr int LdsSize = BlockSize / warpSize;
+        __shared__ T work_buf[LdsSize];
+
+        if(threadIdx.x % warpSize == 0)
+        {
+            int warpIdx       = threadIdx.x / warpSize;
+            work_buf[warpIdx] = t;
+            __syncthreads();
+
+            for(int i = LdsSize >> 1; i > 0; i >>= 1)
+            {
+                if(warpIdx < i)
+                    work_buf[warpIdx] += work_buf[warpIdx + i];
+
+                __syncthreads();
+            }
+        }
+
+        if(threadIdx.x == 0)
+            output[blockIdx.x] = work_buf[0];
     }
 }
 
