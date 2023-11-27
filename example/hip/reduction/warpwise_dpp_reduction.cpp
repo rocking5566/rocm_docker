@@ -111,11 +111,13 @@ __global__ void blockwise_reduce_kernel(T* input, T* output, int K)
     }
 }
 
-void generate_data(float* tensor, int M, int K)
+using data_t = float;
+
+void generate_data(data_t* tensor, int M, int K)
 {
     for(int m = 0; m < M; ++m)
         for(int k = 0; k < K; ++k)
-            tensor[m * K + k] = static_cast<float>(k);
+            tensor[m * K + k] = static_cast<data_t>(k);
 }
 
 int main()
@@ -125,17 +127,17 @@ int main()
     const int gridSize  = M;
     const int blockSize = K;
 
-    float* dev_in;
-    float* dev_out;
-    float* host_in  = new float[M * K];
-    float* host_out = new float[M];
-    HIP_ASSERT(hipMalloc(&dev_in, sizeof(float) * M * K));
-    HIP_ASSERT(hipMalloc(&dev_out, sizeof(float) * M));
+    data_t* dev_in;
+    data_t* dev_out;
+    data_t* host_in  = new data_t[M * K];
+    data_t* host_out = new data_t[M];
+    HIP_ASSERT(hipMalloc(&dev_in, sizeof(data_t) * M * K));
+    HIP_ASSERT(hipMalloc(&dev_out, sizeof(data_t) * M));
 
     generate_data(host_in, M, K);
 
-    HIP_ASSERT(hipMemcpy(dev_in, host_in, sizeof(float) * M * K, hipMemcpyHostToDevice));
-    const auto reduce_kernel = blockwise_reduce_kernel<float, blockSize>;
+    HIP_ASSERT(hipMemcpy(dev_in, host_in, sizeof(data_t) * M * K, hipMemcpyHostToDevice));
+    const auto reduce_kernel = blockwise_reduce_kernel<data_t, blockSize>;
     // warmup
     for(int i = 0; i < 3; ++i)
         hipLaunchKernelGGL(
@@ -156,7 +158,7 @@ int main()
     hipEventElapsedTime(&total_time, start, stop);
     printf("time = %fms\n", total_time / nrepeat);
 
-    HIP_ASSERT(hipMemcpy(host_out, dev_out, sizeof(float) * M, hipMemcpyDeviceToHost));
+    HIP_ASSERT(hipMemcpy(host_out, dev_out, sizeof(data_t) * M, hipMemcpyDeviceToHost));
 
     printf("kernel:%f, ref:%d\n", host_out[0], (K - 1) * K / 2);
 
