@@ -1,4 +1,4 @@
-tag?=2023.09.29
+tag?=2024.01.05
 IMAGE_NAME=rocking_ck:$(tag)
 MOUNT_DIR=-v /home/rocking/work/composable_kernel:/work
 
