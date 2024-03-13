@@ -1,4 +1,4 @@
-FROM rocm/pytorch:rocm5.4.1_ubuntu20.04_py3.7_pytorch_1.12.1
+FROM rocm/pytorch:rocm6.0_ubuntu20.04_py3.9_pytorch_2.1.1
 
 # RUN git clone -b amd-stg-open https://github.com/RadeonOpenCompute/llvm-project.git \
 #     && cd llvm-project && mkdir -p build && cd build \
