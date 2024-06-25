@@ -1,4 +1,4 @@
-tag?=2023.03.07
+tag?=2024.06.25
 IMAGE_NAME=rocking_pytorch:$(tag)
 MOUNT_DIR=-v ${HOME}/work:/work
 
