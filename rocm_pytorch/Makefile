@@ -1,5 +1,5 @@
-tag?=2024.06.25
-IMAGE_NAME=rocking_pytorch:$(tag)
+tag?=rocm6.2_ubuntu20.04_py3.9_pytorch_release_2.3.0
+IMAGE_NAME=rocm/pytorch:$(tag)
 MOUNT_DIR=-v ${HOME}/work:/work
 
 ROCM_PARAM=--device=/dev/kfd --device=/dev/dri \
